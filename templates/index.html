@@ -1,0 +1,425 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{% static 'styles.css'%}" />
+    <title>DataSphere</title>
+  </head>
+  <body>
+    <div>
+      <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" id="logo"></a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasDarkNavbar"
+            aria-controls="offcanvasDarkNavbar"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div
+            class="offcanvas offcanvas-end bg-primary"
+            tabindex="-1"
+            id="offcanvasDarkNavbar"
+            aria-labelledby="offcanvasDarkNavbarLabel"
+          >
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
+                API BUILDING
+              </h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="offcanvas-body bg-primary">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    data-category="random-facts-container"
+                    href="#"
+                    onclick="changeLogo('Random Facts generator')"
+                    >Random Facts generator</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    href="#"
+                    data-category="random-student-container"
+                    onclick="changeLogo('Random student generator')"
+                    >Random student generator</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    href="#"
+                    data-category="random-image-container"
+                    onclick="changeLogo('Random Image generator')"
+                    >Random Image generator</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <!-- Random facts -->
+    <div class="main_container">
+      <div id="random-facts-container" class="randomFacts-container section">
+        <div class="card">
+          <div class="tools">
+            <div class="circle">
+              <span class="red box"></span>
+            </div>
+            <div class="circle">
+              <span class="yellow box"></span>
+            </div>
+            <div class="circle">
+              <span class="green box"></span>
+            </div>
+          </div>
+          <div class="card-title">
+            <h1>Random Fact</h1>
+          </div>
+          <div class="content">
+            <p id="fact">{{fact}}</p>
+          </div>
+          <button class="button" id="next-fact-button">Next Random Fact</button>
+        </div>
+      </div>
+      <!-- student -->
+      <div
+        id="random-student-container"
+        class="randomStudent-container section"
+      >
+        <div class="wrapper">
+          <div class="profile-card">
+            <div class="profile-card__img">
+              <img src="" alt="" />
+            </div>
+            <div class="info-card">
+              <div id="student-info"></div>
+              <button id="next-student-btn">Next Student</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dog Api -->
+      <div id="random-image-container" class="random-image-container section">
+        <div class="tab-btn">
+          <button
+            type="button"
+            class="btn btn-info"
+            data-category="Random-image"
+          >
+            Random Image
+          </button>
+          <button type="button" class="btn btn-info" data-category="By-breed">
+            By Breed
+          </button>
+          <button
+            type="button"
+            class="btn btn-info"
+            data-category="By-sub-breed"
+          >
+            By Sub-breed
+          </button>
+        </div>
+        <div class="display-container">
+          <div class="random-image image-section" id="Random-image">
+            <div class="card-random-image">
+              <img id="dog-image" src="" alt="Dog Image" />
+            </div>
+            <div class="generate-btn">
+              <button id="generate-button" class="generate-button">
+                Generate another image
+              </button>
+            </div>
+          </div>
+          <div class="by-breed image-section" id="By-breed">
+            <div class="search">
+              <select id="breed-select">
+                <option value="">Select a breed</option>
+              </select>
+              <button type="submit">Generate</button>
+            </div>
+            <div class="card-random-breed"></div>
+          </div>
+          <div class="sub-breed image-section" id="By-sub-breed">
+            <div class="search-by-sub-breed">
+              <div class="flex-row">
+                <select id="select-breed">
+                  <option value="">Select a breed</option>
+                </select>
+                <select id="sub-breed-select">
+                  <option value="">Select a sub breed</option>
+                </select>
+              </div>
+              <div>
+                <button type="submit" id="search-sub-breed">Generate</button>
+              </div>
+            </div>
+            <div class="card-random-sub-breed"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Random Facts
+      document
+        .getElementById("next-fact-button")
+        .addEventListener("click", function () {
+          fetch('{% url "get_random_fact" %}', {
+            headers: {
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              Pragma: "no-cache",
+              Expires: "0",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("fact").innerText = data.fact;
+            })
+            .catch((error) => {
+              console.error("Error fetching random fact:", error);
+            });
+        });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        fetchRandomFact();
+      });
+
+      document
+        .getElementById("next-fact-button")
+        .addEventListener("click", function () {
+          fetchRandomFact();
+        });
+
+      function fetchRandomFact() {
+        fetch('{% url "get_random_fact" %}')
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("fact").innerText = data.fact;
+          })
+          .catch((error) =>
+            console.error("Error fetching random fact:", error)
+          );
+      }
+
+      //randoms students
+      document.addEventListener("DOMContentLoaded", function () {
+        const studentInfoContainer = document.getElementById("student-info");
+        const studentAvatarImg = document.querySelector(
+          ".profile-card__img img"
+        );
+        const nextStudentBtn = document.getElementById("next-student-btn");
+
+        function fetchRandomStudent() {
+          fetch('{% url "get_random_student" %}')
+            .then((response) => response.json())
+            .then((data) => {
+              studentInfoContainer.innerHTML = `
+                      <h2 class="name">${data.student_name}</h2>
+                      <p class="info-item">Age: ${data.student_age}</p>
+                      <p class="info-item">Gender: ${data.gender}</p>
+                      <p class="info-item">Address: ${data.address}</p>
+                      <p class="info-item">Email: ${data.email}</p>
+                      <p class="info-item">Phone: ${data.phone}</p>
+                      <p class="info-item">Course: ${data.course}</p>
+                      <p class="info-item">GPA: ${data.gpa}</p>
+                  `;
+              studentAvatarImg.src = data.avatar_image;
+            })
+            .catch((error) =>
+              console.error("Error fetching random student data:", error)
+            );
+        }
+        nextStudentBtn.addEventListener("click", function () {
+          fetchRandomStudent();
+        });
+
+        fetchRandomStudent();
+      });
+
+      //random image (dog)
+      document.addEventListener("DOMContentLoaded", function () {
+        const dogImage = document.getElementById("dog-image");
+        function fetchRandomDogImage() {
+          fetch('{% url "get_random_dog" %}')
+            .then((response) => response.json())
+            .then((data) => {
+              const dogUrl = data.dog;
+              dogImage.src = dogUrl;
+            })
+            .catch((error) =>
+              console.error("Error fetching initial dog image:", error)
+            );
+        }
+
+        fetchRandomDogImage();
+
+        const generateButton = document.getElementById("generate-button");
+        generateButton.addEventListener("click", fetchRandomDogImage);
+      });
+
+      //to populate image by breed
+      document.addEventListener("DOMContentLoaded", function () {
+        const dogImage = document.querySelector(".card-random-breed");
+
+        function fetchRandomDogImageByBreed(breed) {
+          fetch(`/get_random_dog_by_breed/${breed}/`)
+            .then((response) => response.json())
+            .then((data) => {
+              const dogUrl = data.dog;
+              dogImage.textContent = "";
+              const img = document.createElement("img");
+              img.src = dogUrl;
+              img.alt = "Dog Image";
+              dogImage.appendChild(img);
+            })
+            .catch((error) =>
+              console.error("Error fetching random dog image by breed:", error)
+            );
+        }
+
+        // Populate breed options in the dropdown
+        fetch("https://dog.ceo/api/breeds/list/all")
+          .then((response) => response.json())
+          .then((data) => {
+            const breedSelect = document.getElementById("breed-select");
+            breedSelect.innerHTML = '<option value="">Select a breed</option>';
+
+            Object.keys(data.message).forEach((breed) => {
+              const option = document.createElement("option");
+              option.value = breed;
+              option.textContent = breed;
+              breedSelect.appendChild(option);
+            });
+          })
+          .catch((error) => console.error("Error fetching breeds:", error));
+
+        const generateButton = document.querySelector(
+          '.search button[type="submit"]'
+        );
+        generateButton.addEventListener("click", function (event) {
+          event.preventDefault();
+
+          const breedSelect = document.getElementById("breed-select");
+          const selectedBreed = breedSelect.value;
+
+          if (selectedBreed) {
+            fetchRandomDogImageByBreed(selectedBreed);
+          } else {
+            alert("Please select a breed.");
+          }
+        });
+      });
+
+      //populate random image by sub breed
+      document.addEventListener("DOMContentLoaded", function () {
+        const breedSelect = document.getElementById("select-breed");
+        const subBreedSelect = document.getElementById("sub-breed-select");
+        const generateButton = document.getElementById("search-sub-breed");
+        const cardRandomSubBreed = document.querySelector(
+          ".card-random-sub-breed"
+        );
+
+        function fetchRandomDogImageBySubBreed(breed, subBreed) {
+          fetch(`/get_random_dog_by_sub_breed/${breed}/${subBreed}/`)
+            .then((response) => response.json())
+            .then((data) => {
+              const dogUrl = data.dog;
+              cardRandomSubBreed.innerHTML = `<img src="${dogUrl}" alt="Dog Image">`;
+            })
+            .catch((error) =>
+              console.error(
+                "Error fetching random dog image by sub-breed:",
+                error
+              )
+            );
+        }
+
+        // Function to populate breed options in the dropdown
+        function populateBreeds() {
+          fetch("https://dog.ceo/api/breeds/list/all")
+            .then((response) => response.json())
+            .then((data) => {
+              breedSelect.innerHTML =
+                '<option value="">Select a breed</option>';
+              Object.entries(data.message).forEach(([breed, subBreeds]) => {
+                if (subBreeds.length > 0) {
+                  const option = document.createElement("option");
+                  option.value = breed;
+                  option.textContent = breed;
+                  breedSelect.appendChild(option);
+                }
+              });
+            })
+            .catch((error) => console.error("Error fetching breeds:", error));
+        }
+
+        breedSelect.addEventListener("change", function () {
+          const selectedBreed = breedSelect.value;
+          if (selectedBreed) {
+            fetch(`https://dog.ceo/api/breed/${selectedBreed}/list`)
+              .then((response) => response.json())
+              .then((data) => {
+                subBreedSelect.innerHTML =
+                  '<option value="">Select a sub breed</option>';
+                data.message.forEach((subBreed) => {
+                  const option = document.createElement("option");
+                  option.value = subBreed;
+                  option.textContent = subBreed;
+                  subBreedSelect.appendChild(option);
+                });
+              })
+              .catch((error) =>
+                console.error("Error fetching sub-breeds:", error)
+              );
+          } else {
+            subBreedSelect.innerHTML =
+              '<option value="">Select a sub breed</option>';
+          }
+        });
+
+        generateButton.addEventListener("click", function (event) {
+          event.preventDefault();
+
+          const selectedBreed = breedSelect.value;
+          const selectedSubBreed = subBreedSelect.value;
+
+          if (selectedBreed && selectedSubBreed) {
+            fetchRandomDogImageBySubBreed(selectedBreed, selectedSubBreed);
+          } else {
+            alert("Please select both a breed and a sub breed.");
+          }
+        });
+
+        populateBreeds();
+      });
+    </script>
+    <script src="{% static 'script.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
