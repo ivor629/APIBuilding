@@ -1,5 +1,4 @@
 aniso8601==9.0.1
-apturl==0.5.2
 argcomplete==1.8.1
 asgiref==3.8.1
 async-timeout==4.0.3
